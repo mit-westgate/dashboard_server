@@ -62,6 +62,7 @@ fn handle_connection(mut stream: TcpStream, state: Arc<Mutex<State>>,view: Arc<M
     let not_found_status = b"HTTP/1/1 404 NOT FOUND\r\n";
     let rn = b"\r\n";
     let header_json = b"Content-Type:application/json;charset=UTF-8\r\n";
+    let header_cors = b"Access-Control-Allow-Origin:*\r\n";
     
     let mut response = Vec::new();
     
@@ -73,6 +74,7 @@ fn handle_connection(mut stream: TcpStream, state: Arc<Mutex<State>>,view: Arc<M
     } else if buffer.starts_with(status_json) {
         response.extend_from_slice(ok_status);
         response.extend_from_slice(header_json);
+        response.extend_from_slice(header_cors);
         response.extend_from_slice(rn);
 
         let mut view_locked = view.lock().unwrap();
